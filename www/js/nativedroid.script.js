@@ -1,5 +1,5 @@
 $(document).on("pageinit", function() {
-
+	
 	function strip_tags(input, allowed) {
 		allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
 		// making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
@@ -1362,12 +1362,12 @@ $(document).on("pageinit", function() {
 		var diff      = now.getTime() - lastDate.getTime();
 		var diffmins  = parseInt(diff / 60000);
 		var diffhours = parseFloat(diffmins / 60);
-console.log(diffhours);
+
 		if(diffhours < 1){
-			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes()+' ('+diffmins+ ' mins ago)';
+			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes().toFixed(2)+' ('+diffmins+ ' mins ago)';
 		}
 		else{
-			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes()+' ('+diffhours+ ' hours ago)';
+			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes().toFixed(2)+' ('+diffhours+ ' hours ago)';
 		}
 
 		$('#lastFeed').html(lastFeedMessage);
@@ -1432,9 +1432,13 @@ console.log(diffhours);
 					  var m =  dateObject.getMonth();
 					  m += 1;  // JavaScript months are 0-11
 					  var y = dateObject.getFullYear();
-					  var time = dateObject.getHours()+':'+dateObject.getMinutes();
+					  var minutes = dateObject.getMinutes();
+					  minutes = minutes > 9 ? minutes : '0' + minutes;
+					  var time = dateObject.getHours()+':'+minutes;
 				      var formattedDate = d+'/'+m+'/'+y;
 				      var timeTaken = '';
+				      var eventArray = [];
+				      var iconList = '';
 
 				      if(formattedDate != previousDate){
 				      	dateItem = '<li id="'+dateObject+'" data-role="list-divider">'+formattedDate+'<span id="'+itemData.created+'-count" class="ui-li-count"></span></li>';
@@ -1442,10 +1446,17 @@ console.log(diffhours);
 				      }
 
 				      if(itemData.timeTaken != '00:00:00'){
-				      	timeTaken = 'Time Taken '+itemData.timeTaken;
+				      	timeTaken = ' (time taken '+itemData.timeTaken+')';
 				      }
 
-				      listItem = '<li><a href="#"><h2>'+itemData.eventType+'</h2><p>'+timeTaken+'</p><p class="ui-li-aside"><strong>'+time+'</strong></p></a></li>';
+				      var eventArray = itemData.eventType.split(",");
+
+				      $.each(eventArray,function(i){
+				      	iconClass = eventArray[i].replace(/ /g,'').toLowerCase();
+				      	iconList = iconList+'<i class="'+iconClass+'"></i>';
+					  });
+
+				      listItem = '<li><a href="#"><h2><strong>'+time+timeTaken+' </strong></h2><div class="iconHolder">'+iconList+'</div></a></li>';
 				      $('#calender-list').append(listItem).listview('refresh');
 					  previousDate = formattedDate;
 

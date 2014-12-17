@@ -1686,3 +1686,49 @@ progress  {
 	-o-transition: none !important;
 	transition: none !important;
 }
+
+.iconHolder{
+	float:left;
+}
+
+.bottlefeed, .food, .nappychange, .rightbreastfeed, .walk, .leftbreastfeed{
+	background: url(images/sprites.png) no-repeat;
+}
+
+.bottlefeed{
+	background-position: -13px -5px ;
+	width: 22px;
+	height: 40px;
+}
+
+.food{
+	background-position: -6px -52px ;
+	width: 34px;
+	height: 32px;
+}
+
+.nappychange{
+	background-position: -56px -53px ;
+	width: 35px;
+	height: 30px;
+}
+
+.rightbreastfeed{
+	background-position: -104px -6px ;
+	width: 39px;
+	height: 36px;
+}
+
+.walk{
+	background-position: -149px -5px ;
+	width: 38px;
+	height: 38px;
+}
+
+.leftbreastfeed{
+	background-position: -54px -7px ;
+	width: 39px;
+	height: 36px;
+}
+
+
