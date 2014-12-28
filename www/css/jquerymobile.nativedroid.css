@@ -590,8 +590,8 @@ div.inset {
 	font-size: 15px;
 	font-weight: 300;
 	background-color: #ec008c;
-	padding: 5px 5px 5px 5px;
-	border-radius: 20px;
+	padding: 8px 8px 8px 8px;
+	border-radius: 8px;
 }
 
 #introLogo{
