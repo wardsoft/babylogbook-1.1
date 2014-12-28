@@ -1,5 +1,5 @@
 $(document).on("pageinit", function() {
-	
+
 	function strip_tags(input, allowed) {
 		allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
 		// making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
@@ -1302,13 +1302,16 @@ $(document).on("pageinit", function() {
 				  }
 				});
 			}
-		  
-
 		});
 	}
 	else{
+		renderHeader();
 		renderCalender();
 		nativeDroid.plugins.calender.getEvents();
+	}
+
+	function renderHeader(){
+
 	}
 
 	//Handle adding event
@@ -1358,16 +1361,19 @@ $(document).on("pageinit", function() {
 		showHeaderFooter();
 		var now       = new Date();
 		var lastDate  = new Date($( "#calender-list li" ).first().attr('id'));
+		var minutes = lastDate.getMinutes();
+		minutes = minutes > 9 ? minutes : '0' + minutes;
+		var time = lastDate.getHours()+':'+minutes;
 		var diffMs    = (now - lastDate); 
 		var diff      = now.getTime() - lastDate.getTime();
 		var diffmins  = parseInt(diff / 60000);
-		var diffhours = parseFloat(diffmins / 60);
+		var diffhours = parseFloat(diffmins / 60).toFixed(2);
 
 		if(diffhours < 1){
-			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes().toFixed(2)+' ('+diffmins+ ' mins ago)';
+			lastFeedMessage = 'Last Feed was at '+time+' ('+diffmins+ ' mins ago)';
 		}
 		else{
-			lastFeedMessage = 'Last Feed was at '+lastDate.getHours()+':'+lastDate.getMinutes().toFixed(2)+' ('+diffhours+ ' hours ago)';
+			lastFeedMessage = 'Last Feed was at '+time+' ('+diffhours+ ' hours ago)';
 		}
 
 		$('#lastFeed').html(lastFeedMessage);
@@ -1380,6 +1386,35 @@ $(document).on("pageinit", function() {
 		location.reload();
 	});
 
+	$('#settings').on('click',function(){
+		hideAll();
+		showHeaderFooter();
+		var Baby = Parse.Object.extend("Baby");
+		var query = new Parse.Query(Baby);
+		query.equalTo("userId", $.jStorage.get('clientKey'));
+
+			query.find({
+			  success: function(results) {
+			  	$('[name=babyForename]').val(results[0].get('babyForename'));
+			  	$('[name=babyMiddleName]').val(results[0].get('babyMiddleName'));
+			  	$('[name=babySurname]').val(results[0].get('babySurname'));
+
+			  	var dateObject = new Date(results[0].get('dateOfBirth'));
+				var d =  dateObject.getDate();
+			    var m =  dateObject.getMonth();
+				m += 1;  // JavaScript months are 0-11
+				var y = dateObject.getFullYear();
+				var formattedDate = y+'-'+m+'-'+d;
+
+			  	$('[name=dateOfBirth]').val(formattedDate);
+			  	$('[name=settings-form]').show();
+			  },
+			  error: function(error) {
+			    alert("Error: " + error.code + " " + error.message);
+			  }
+			});
+	});
+
 	function hideAll(){
 		$('[name=login-form]').hide();
 		$('#calender-list').hide();
@@ -1388,9 +1423,26 @@ $(document).on("pageinit", function() {
 		$('[data-role="footer"]').hide();
 		$('[data-role="header"]').hide();
 		$('#introLogo').hide();
+		$('[name=settings-form]').hide();
 	}
 
 	function showHeaderFooter(){
+		var Baby = Parse.Object.extend("Baby");
+		var query = new Parse.Query(Baby);
+		query.equalTo("userId", $.jStorage.get('clientKey'));
+
+			query.find({
+			  success: function(results) {
+			  	babyFullName = results[0].get('babyForename')+' '+results[0].get('babyMiddleName')+' '+results[0].get('babySurname');
+			  	var now       = new Date();
+				var lastDate  = new Date(results[0].get('dateOfBirth'));
+				var age       = getNiceTime(lastDate,now,2,false)+' old';
+				$('#credentials').html('<i>'+babyFullName+'<br> '+age+'</i>');			  	
+			  },
+			  error: function(error) {
+			    alert("Error: " + error.code + " " + error.message);
+			  }
+			});
 		$('[data-role="footer"]').show();
 		$('[data-role="header"]').show();
 	}
@@ -1400,11 +1452,13 @@ $(document).on("pageinit", function() {
 		hideAll();
 		showHeaderFooter();
 		$('#calender-list').show();
+		var dayCount = 0;
 		var eventObject = [];
-			var EventLog = Parse.Object.extend("EventLog");
-			var query = new Parse.Query(EventLog);
-			query.equalTo("userId", $.jStorage.get('clientKey'));
-			query.descending("createdAt");
+		var EventLog = Parse.Object.extend("EventLog");
+		var query = new Parse.Query(EventLog);
+		query.equalTo("userId", $.jStorage.get('clientKey'));
+		query.descending("createdAt");
+		query.limit(40);
 
 			query.find({
 			  success: function(results) {
@@ -1441,6 +1495,7 @@ $(document).on("pageinit", function() {
 				      var iconList = '';
 
 				      if(formattedDate != previousDate){
+				      	dayCount = 0;
 				      	dateItem = '<li id="'+dateObject+'" data-role="list-divider">'+formattedDate+'<span id="'+itemData.created+'-count" class="ui-li-count"></span></li>';
 				      	$('#calender-list').append(dateItem).listview('refresh');
 				      }
@@ -1456,11 +1511,12 @@ $(document).on("pageinit", function() {
 				      	iconList = iconList+'<i class="'+iconClass+'"></i>';
 					  });
 
+				      dayCount = dayCount + 1;
 				      listItem = '<li><a href="#"><h2><strong>'+time+timeTaken+' </strong></h2><div class="iconHolder">'+iconList+'</div></a></li>';
 				      $('#calender-list').append(listItem).listview('refresh');
 					  previousDate = formattedDate;
 
-					  $('.ui-li-count').html(index);
+					  //$( "li" ).closest('.ui-li-divider').html(dayCount);
 					});
 			    }
 			    
@@ -1494,5 +1550,120 @@ $(document).on("pageinit", function() {
 		});
 	});
 
-	
+	/**
+ * Function to print date diffs.
+ * 
+ * @param {Date} fromDate: The valid start date
+ * @param {Date} toDate: The end date. Can be null (if so the function uses "now").
+ * @param {Number} levels: The number of details you want to get out (1="in 2 Months",2="in 2 Months, 20 Days",...)
+ * @param {Boolean} prefix: adds "in" or "ago" to the return string
+ * @return {String} Diffrence between the two dates.
+ */
+function getNiceTime(fromDate, toDate, levels, prefix){
+    var lang = {
+            "date.past": "{0} ago",
+            "date.future": "in {0}",
+            "date.now": "now",
+            "date.year": "{0} year",
+            "date.years": "{0} years",
+            "date.years.prefixed": "{0} years",
+            "date.month": "{0} month",
+            "date.months": "{0} months",
+            "date.months.prefixed": "{0} months",
+            "date.day": "{0} day",
+            "date.days": "{0} days",
+            "date.days.prefixed": "{0} days",
+            "date.hour": "{0} hour",
+            "date.hours": "{0} hours",
+            "date.hours.prefixed": "{0} hours",
+            "date.minute": "{0} minute",
+            "date.minutes": "{0} minutes",
+            "date.minutes.prefixed": "{0} minutes",
+            "date.second": "{0} second",
+            "date.seconds": "{0} seconds",
+            "date.seconds.prefixed": "{0} seconds",
+        },
+        langFn = function(id,params){
+            var returnValue = lang[id] || "";
+            if(params){
+                for(var i=0;i<params.length;i++){
+                    returnValue = returnValue.replace("{"+i+"}",params[i]);
+                }
+            }
+            return returnValue;
+        },
+        toDate = toDate ? toDate : new Date(),
+        diff = fromDate - toDate,
+        past = diff < 0 ? true : false,
+        diff = diff < 0 ? diff * -1 : diff,
+        date = new Date(new Date(1970,0,1,0).getTime()+diff),
+        returnString = '',
+        count = 0,
+        years = (date.getFullYear() - 1970);
+    if(years > 0){
+        var langSingle = "date.year" + (prefix ? "" : ""),
+            langMultiple = "date.years" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (years > 1 ? langFn(langMultiple,[years]) : langFn(langSingle,[years]));
+        count ++;
+    }
+    var months = date.getMonth();
+    if(count < levels && months > 0){
+        var langSingle = "date.month" + (prefix ? "" : ""),
+            langMultiple = "date.months" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (months > 1 ? langFn(langMultiple,[months]) : langFn(langSingle,[months]));
+        count ++;
+    } else {
+        if(count > 0)
+            count = 99;
+    }
+    var days = date.getDate() - 1;
+    if(count < levels && days > 0){
+        var langSingle = "date.day" + (prefix ? "" : ""),
+            langMultiple = "date.days" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (days > 1 ? langFn(langMultiple,[days]) : langFn(langSingle,[days]));
+        count ++;
+    } else {
+        if(count > 0)
+            count = 99;
+    }
+    var hours = date.getHours();
+    if(count < levels && hours > 0){
+        var langSingle = "date.hour" + (prefix ? "" : ""),
+            langMultiple = "date.hours" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (hours > 1 ? langFn(langMultiple,[hours]) : langFn(langSingle,[hours]));
+        count ++;
+    } else {
+        if(count > 0)
+            count = 99;
+    }
+    var minutes = date.getMinutes();
+    if(count < levels && minutes > 0){
+        var langSingle = "date.minute" + (prefix ? "" : ""),
+            langMultiple = "date.minutes" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (minutes > 1 ? langFn(langMultiple,[minutes]) : langFn(langSingle,[minutes]));
+        count ++;
+    } else {
+        if(count > 0)
+            count = 99;
+    }
+    var seconds = date.getSeconds();
+    if(count < levels && seconds > 0){
+        var langSingle = "date.second" + (prefix ? "" : ""),
+            langMultiple = "date.seconds" + (prefix ? ".prefixed" : "");
+        returnString += (count > 0 ?  ', ' : '') + (seconds > 1 ? langFn(langMultiple,[seconds]) : langFn(langSingle,[seconds]));
+        count ++;
+    } else {
+        if(count > 0)
+            count = 99;
+    }
+    if(prefix){
+        if(returnString == ""){
+            returnString = langFn("date.now");
+        } else if(past)
+            returnString = langFn("date.past",[returnString]);
+        else
+            returnString = langFn("date.future",[returnString]);
+    }
+    return returnString;
+}
 }); 

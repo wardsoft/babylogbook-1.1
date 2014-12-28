@@ -52,6 +52,7 @@
 
         <div data-role="header" data-position="fixed" data-tap-toggle="false" data-theme='b'>
             <div id="topLogo"></div>
+            <div id="credentials"></div>
         </div>
         
         <div id="content" data-role="content">   
@@ -118,6 +119,41 @@
                     <h1 id="lastFeed"></h1>
                 </li>
             </ul>
+
+             <form name="settings-form">
+                <ul data-role="listview" data-inset="true">
+                    <li data-role="fieldcontain">
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                            <legend>Babies Gender</legend>
+                            <input type="radio" name="gender" id="radio-choice-ab" value="choice-a" checked="checked">
+                            <label for="radio-choice-ab">Select</label>
+                            <input type="radio" name="gender" id="genderBoy" value="Boy">
+                            <label for="genderBoy">Boy</label>
+                            <input type="radio" name="gender" id="genderGirl" value="Girl">
+                            <label for="genderGirl">Girl</label>
+                        </fieldset>
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="name2b">Babies Forename:</label>
+                        <input type="text" name="babyForename" id="babyForename" value="" data-clear-btn="true">
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="name2b">Babies Middle Name:</label>
+                        <input type="text" name="babyMiddleName" id="babyMiddleName" value="" data-clear-btn="true">
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="name2b">Babies Surname:</label>
+                        <input type="text" name="babySurname" id="babySurname" value="" data-clear-btn="true">
+                    </li>
+                    <li data-role="fieldcontain">
+                        <label for="inputDate">Date Of Birth:</label>
+                        <input type="date" name="dateOfBirth" id="dateOfBirth" value="" data-clear-btn="true" placeholder="">
+                    </li>
+                    <li>
+                        <button type="submit" data-inline='true'><i class='lIcon fa fa-check'></i>Update</button>
+                    </li>
+                </ul>
+            </form>
         </div>
 
 
@@ -127,6 +163,7 @@
                     <li id="dashboard"><a href="#" class="show-page-loading-msg" data-textonly="false" data-textvisible="false" data-msgtext="" data-inline="true"><i class='blIcon fa fa-dashboard' ></i></a></li>
                     <li id="calender"><a href="#"><i class='blIcon fa fa-calendar'></i></a></li>
                     <li id="addEvent"><a href="#"><i class='blIcon fa fa-plus-circle'></i></a></li>
+                    <li id="settings"><a href="#"><i class='blIcon fa fa-cogs'></i></a></li>
                     <li id="logout"><a href="#"><i class='blIcon fa fa-sign-out'></i></a></li>
                 </ul>
             </div>
