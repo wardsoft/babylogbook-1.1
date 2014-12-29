@@ -587,11 +587,19 @@ div.inset {
 	margin-top: 5px;
 	margin-right: 5px;
 	color: white;
-	font-size: 15px;
-	font-weight: 300;
 	background-color: #ec008c;
 	padding: 8px 8px 8px 8px;
-	border-radius: 8px;
+	border-top-left-radius: 160px;
+	border-bottom-left-radius: 160px;
+	border-top-right-radius: 160px;
+	border-bottom-right-radius: 160px;
+}
+
+#credentials p{
+	font-size: 14px;
+	font-weight: 400;
+	padding: 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
 }
 
 #introLogo{
@@ -1708,41 +1716,41 @@ progress  {
 
 .bottlefeed, .food, .nappychange, .walk, .leftbreastfeed, .rightbreastfeed{
 	background: url(images/sprites.png) no-repeat;
-	background-size: 279px 49px;
+	background-size: 200px 34px;
 }
 
 .bottlefeed{
-	background-position: -2px -2px ;
-	width: 45px;
-	height: 49px;
+	background-position: 0px -2px;
+	width: 34px;
+	height: 34px;
 }
 
 .food{
-	background-position: -47px -4px ;
-	width: 45px;
-	height: 49px;
+	background-position: -34px 0px ;
+	width: 34px;
+	height: 34px;
 }
 
 .nappychange{
-	background-position: -139px 1px ;
-	width: 45px;
-	height: 49px;
+	background-position: -99px 1px;
+	width: 34px;
+	height: 34px;
 }
 
 .walk{
-	background-position: -96px 0;
-	width: 45px;
-	height: 49px;
+	background-position: -66px 0;
+	width: 34px;
+	height: 34px;
 }
 
 .leftbreastfeed{
-	background-position: -232px 0;
-	width: 45px;
-	height: 49px;
+	background-position: -165px 1px;
+	width: 34px;
+	height: 34px;
 }
 
 .rightbreastfeed{
-	background-position: -186px 0;
-	width: 45px;
-	height: 49px;
+	background-position: -132px 0;
+	width: 35px;
+	height: 34px;
 }

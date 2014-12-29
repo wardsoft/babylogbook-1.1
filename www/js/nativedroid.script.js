@@ -1378,6 +1378,21 @@ $(document).on("pageinit", function() {
 
 		$('#lastFeed').html(lastFeedMessage);
 
+		var EventLog = Parse.Object.extend("EventLog");
+		var query = new Parse.Query(EventLog);
+		query.equalTo("userId", $.jStorage.get('clientKey'));
+		query.equalTo("eventType", $.jStorage.get('clientKey'));
+		console.log($.jStorage.get('eventObject'));
+		query.count({
+		  success: function(count) {
+		    // The count request succeeded. Show the count
+		    
+		  },
+		  error: function(error) {
+		    // The request failed
+		  }
+		});
+
 		$('#dashboard-list').show();
 	});
 
@@ -1395,9 +1410,17 @@ $(document).on("pageinit", function() {
 
 			query.find({
 			  success: function(results) {
+			  	console.log(results[0].get('babyGender'));
 			  	$('[name=babyForename]').val(results[0].get('babyForename'));
 			  	$('[name=babyMiddleName]').val(results[0].get('babyMiddleName'));
 			  	$('[name=babySurname]').val(results[0].get('babySurname'));
+
+			  	if(results[0].get('babyGender') == 'Boy'){
+
+			  	}
+			  	else{
+			  		$('.genderGirl').attr('checked',true);
+			  	}
 
 			  	var dateObject = new Date(results[0].get('dateOfBirth'));
 				var d =  dateObject.getDate();
@@ -1437,7 +1460,7 @@ $(document).on("pageinit", function() {
 			  	var now       = new Date();
 				var lastDate  = new Date(results[0].get('dateOfBirth'));
 				var age       = getNiceTime(lastDate,now,2,false)+' old';
-				$('#credentials').html('<i>'+babyFullName+'<br> '+age+'</i>');			  	
+				$('#credentials').html('<p>'+babyFullName+'-'+age+'</p>');			  	
 			  },
 			  error: function(error) {
 			    alert("Error: " + error.code + " " + error.message);
@@ -1519,8 +1542,8 @@ $(document).on("pageinit", function() {
 					  //$( "li" ).closest('.ui-li-divider').html(dayCount);
 					});
 			    }
-			    
-			   //console.log(eventJSON);
+
+			   $.jStorage.set('eventObject',eventObject);
 			  },
 			  error: function(error) {
 			    alert("Error: " + error.code + " " + error.message);
@@ -1538,7 +1561,7 @@ $(document).on("pageinit", function() {
 
 		user.set("username", serializedForm[0].value);
 		user.set("password", serializedForm[1].value);
-		 console.log(serializedForm);
+
 		user.signUp(null, {
 		  success: function(user) {
 
@@ -1546,6 +1569,29 @@ $(document).on("pageinit", function() {
 		  error: function(user, error) {
 		    // Show the error message somewhere and let the user try again.
 		    alert("Error: " + error.code + " " + error.message);
+		  }
+		});
+	});
+
+	$('[name=settings-form]').on('submit',function(e){
+		e.preventDefault();
+		var serializedForm = $('[name=settings-form]').serializeArray();
+
+		var Baby = Parse.Object.extend("Baby");
+		var baby = new Baby();
+		 
+		baby.set("score", 1337);
+		baby.set("playerName", "Sean Plott");
+		baby.set("cheatMode", false);
+		baby.set("skills", ["pwnage", "flying"]);
+		 
+		gameScore.save(null, {
+		  success: function(gameScore) {
+		    // Now let's update it with some new data. In this case, only cheatMode and score
+		    // will get sent to the cloud. playerName hasn't changed.
+		    gameScore.set("cheatMode", true);
+		    gameScore.set("score", 1338);
+		    gameScore.save();
 		  }
 		});
 	});
