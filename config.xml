@@ -14,8 +14,11 @@
   <preference name="ios-statusbarstyle" value="black-opaque"/>
   <preference name="detect-data-types" value="true"/>
   <preference name="exit-on-suspend" value="false"/>
+  <preference name="SplashScreen" value="foo" />
+  <preference name="SplashScreenDelay" value="100000" />
   <preference name="show-splash-screen-spinner" value="true"/>
-  <preference name="auto-hide-splash-screen" value="true"/>
+  <preference name="auto-hide-splash-screen" value="false"/>
+  <preference name="splash-screen-duration" value="6000"/>
   <preference name="disable-cursor" value="false"/>
   <preference name="android-minSdkVersion" value="7"/>
   <preference name="android-installLocation" value="auto"/>

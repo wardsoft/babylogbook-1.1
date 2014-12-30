@@ -588,7 +588,7 @@ div.inset {
 	margin-right: 5px;
 	color: white;
 	background-color: #ec008c;
-	padding: 8px 8px 8px 8px;
+	padding: 10px 10px 10px 10px;
 	border-top-left-radius: 160px;
 	border-bottom-left-radius: 160px;
 	border-top-right-radius: 160px;
@@ -1744,7 +1744,7 @@ progress  {
 }
 
 .leftbreastfeed{
-	background-position: -165px 1px;
+	background-position: -166px 1px;
 	width: 34px;
 	height: 34px;
 }

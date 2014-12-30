@@ -44,6 +44,14 @@
         <script type="text/javascript" src="js/jstorage.js"></script>
         <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.2.min.js"></script>        
         <script src="js/nativedroid.script.js"></script>
+        <script src="js/login.js"></script>
+        <script src="js/register.js"></script>
+        <script src="js/calender.js"></script>
+        <script src="js/dashboard.js"></script>
+        <script src="js/event.js"></script>
+        <script src="js/settings.js"></script>
+        <script src="js/dateFormat.js"></script>
+        <script src="js/bootstrap.js"></script>
         <script type="text/javascript" src="js/jquery.timer.js"></script>
     </head>
     <body>
@@ -80,7 +88,10 @@
             </div>
             <form name="event-form" method="post">
                 <ul data-role="listview" data-inset="true">
-        
+                    <li data-role="fieldcontain">
+                        <label for="createdAt">Event Date:</label>
+                        <input type="datetime" name="createdAt" id="createdAt" value="" data-clear-btn="true" placeholder="">
+                    </li>
                    <li data-role="fieldcontain">
                          <fieldset data-role="controlgroup">
                             <input type="checkbox" name="checkbox-1a" id="checkbox-1ab" value="Left Breast Feed">
@@ -119,7 +130,7 @@
                     <h1 id="lastFeed"></h1>
                 </li>
                 <li data-cards-type='dashboard'>
-                    <h1 id="feedCount">5 <div class="iconHolder"><i class="bottlefeed"></i></div> Feeds</h1>
+                    <h1 id="feedCount"></h1>
                 </li>
                 <li data-cards-type='dashboard'>
                     <h1 id="nappyChangeCount"></h1>
